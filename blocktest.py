@@ -4,7 +4,7 @@ from numpy import *
 #grid for the representation of the wall
 
 wall=np.zeros((8,8), dtype=int32)
-
+print(wall)
 #shapes of the blocks to be stacked
 shapes = {
 	'I':   [[0,0,0,0], 
@@ -70,7 +70,7 @@ def initialiseBlock(newBlock):
     return shape, dimension
 
 
-def isBlankSpaceLeft():
+def isBlankSpaceLeft(dimension):
     #to check if the space is left in the row to stack the block
 
     #VARIABLES
@@ -113,7 +113,10 @@ def isBlankSpaceLeft():
             moreSpace= 1
         else:
             moreSpace= 0
-        if spaceLeft==0:
+        if spaceLeft<int(dimension[1]):
+            wallRow=wallRow-1
+            continue
+        elif spaceLeft==0:
             wallRow=wallRow-1
             continue
         
@@ -130,140 +133,333 @@ def rotateShape(id, shape, moreSpace, space2fill, position):
     times* no. of times the shape woud be rotated
     tos* try another shape
     '''
+
+    wallRow = position[0]
+    wallCols = position[1]
+    
     def rotated(array_2d):
         #rotates the shape by 90 degree
         list_of_tuples = zip(*array_2d[::-1])
         return [list(elem) for elem in list_of_tuples]
         # return map(list, list_of_tuples)
 
+    ornt1=1
+    ornt2=1
+    ornt3=1
+    ornt4=1
+    
     if id=='I':
-        if space2fill>=4:
+        for i in range(4):
+            try:
+                if wall[wallRow][wallCols + i] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow -i][wallCols] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+        if ornt1==1:
             times=0
             tos=0
-        elif space2fill==3:
+        elif ornt2==1:
+            times=1
+            tos=0
+        else:
             times=0
             tos=1
-        elif space2fill==2:
-            times=0
-            tos=1
-        elif space2fill==1:
-            print(space2fill)
-            if position[1]==0:
-                times = 1
-                tos = 0
-            elif position[1]==7:
-                times = 1
-                tos = 0
-            else:
-                times = 0
-                tos = 1
             
     elif id=='J':
-        if space2fill>=3:
+        for i in range(3):
+            try:
+                if wall[wallRow][wallCols + i] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow -i][wallCols] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+            try:
+                if wall[wallRow-1][wallCols - i] !=0:
+                    ornt3 = 0
+            except IndexError:
+                ornt3=0
+            try:
+                if wall[wallRow -i][wallCols+1] !=0:
+                    ornt4 = 0
+            except IndexError:
+                ornt4 = 0
+
+        for i in range(2):
+            try:
+                if wall[wallRow-i][wallCols] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow -2][wallCols+i] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+            try:
+                if wall[wallRow-i][wallCols] !=0:
+                    ornt3 = 0
+            except IndexError:
+                ornt3=0
+            try:
+                if wall[wallRow][wallCols+i] !=0:
+                    ornt4 = 0
+            except IndexError:
+                ornt4 = 0
+
+            
+                
+        if ornt1==1:
             times=0
             tos=0
-        elif space2fill==2:
-            if position[1]==(6):
-                times = 3
-                tos = 0
-            else:
-                times = 0
-                tos= 1
-        elif space2fill==1:
-            if position[1]==(2) or position[1]==(2):
-                times = 2
-                tos = 0
-            else:
-                times = 0
-                tos= 1
+        elif ornt4==1:
+            times=3
+            tos=0
+        elif ornt3==1:
+            times=2
+            tos=0
+        elif ornt2==1 and position[1]!=6:
+            times=1
+            tos=0
+        else:
+            times=0
+            tos=1
+            
+        
             
     elif id=='L':
-        if space2fill>=3:
-            if position[1]==0:
-                times = 1
-                tos = 0
-            else:
-                times=0
-                tos=0
-        elif space2fill==2:
-            if position[1]==0:
-                times = 1
-                tos = 0
-            else:
-                times = 0
-                tos= 1
-        elif space2fill==1:
-            times = 0
-            tos = 1
+        for i in range(3):
+            try:
+                if wall[wallRow][wallCols + i] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow -i][wallCols] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+            try:
+                if wall[wallRow-1][wallCols + i] !=0:
+                    ornt3 = 0
+            except IndexError:
+                ornt3=0
+            try:
+                if wall[wallRow -i][wallCols] !=0:
+                    ornt4 = 0
+            except IndexError:
+                ornt4 = 0
 
-    elif id=='O':
-        if space2fill>=2:
+        for i in range(2):
+            try:
+                if wall[wallRow-i][wallCols+2] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow][wallCols+i] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+            try:
+                if wall[wallRow-i][wallCols] !=0:
+                    ornt3 = 0
+            except IndexError:
+                ornt3=0
+            try:
+                if wall[wallRow-2][wallCols-i] !=0:
+                    ornt4 = 0
+            except IndexError:
+                ornt4 = 0
+
+            
+                
+        if ornt1==1:
             times=0
             tos=0
-        elif space2fill==1:
+        elif ornt2==1:
+            times=1
+            tos=0
+        elif ornt3==1:
+            times=2
+            tos=0
+        elif ornt4==1:
+            times=3
+            tos=0
+        else:
+            times=0
+            tos=1
+
+
+    elif id=='O':
+        for i in range(2):
+            try:
+                if wall[wallRow][wallCols + i] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+        for i in range(2):
+            try:
+                if wall[wallRow-i][wallCols] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+        if ornt1==1:
+            times=0
+            tos=0
+        else:
             times=0
             tos=1
 
     elif id=='S':
-        if space2fill>=3:
-            times=0
-            tos=1
-        if space2fill==2:
-            if position[1]==5:
-                times = 0
-                tos = 0
-            else:
-                times = 0
-                tos= 1
-        if space2fill==1:
-            if position[1]==1 or position[1]==7:
-                times = 1
-                tos = 0
-            else:
-                times = 0
-                tos= 1
+        for i in range(2):
+            try:
+                if wall[wallRow][wallCols + i] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow -i][wallCols] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+            
 
-    elif id=='T':
-        if space2fill>=3:
+        for i in range(2):
+            try:
+                if wall[wallRow-1][wallCols+i+1] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow-i-1][wallCols-1] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+        
+                
+        if ornt1==1 and position[1]!=5:
             times=0
             tos=0
-        elif space2fill==2:
-                times = 0
-                tos= 1
-        elif space2fill==1:
-            if position[1]==7:
-                times = 3
-                tos = 0
-            elif position[1]!=(0):
-                times = 3
-                tos = 0
-            else:
-                times = 0
-                tos= 1
+        elif ornt2==1:
+            times=1
+            tos=0
+        else:
+            times=0
+            tos=1
+
+
+
+    elif id=='T':
+        for i in range(3):
+            try:
+                if wall[wallRow][wallCols + i] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow -i][wallCols] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+            try:
+                if wall[wallRow-1][wallCols + i-1] !=0:
+                    ornt3 = 0
+            except IndexError:
+                ornt3=0
+            try:
+                if wall[wallRow -i][wallCols] !=0:
+                    ornt4 = 0
+            except IndexError:
+                ornt4 = 0
+
+        for i in range(2):
+            try:
+                if wall[wallRow-i][wallCols+1] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow-1][wallCols+i] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+            try:
+                if wall[wallRow-i][wallCols] !=0:
+                    ornt3 = 0
+            except IndexError:
+                ornt3=0
+            try:
+                if wall[wallRow-1][wallCols-i] !=0:
+                    ornt4 = 0
+            except IndexError:
+                ornt4 = 0
+
+            
+                
+        if ornt1==1:
+            times=0
+            tos=0
+        elif ornt4==1:
+            times=3
+            tos=0
+        elif ornt3==1 and position[1]!=6:
+            times=2
+            tos=0
+        elif ornt2==1 and position[1]!=6:
+            times=1
+            tos=0
+        else:
+            times=0
+            tos=1
+
+
         
 
     elif id=='Z':
-        if space2fill>=3:
-            if position[1]!=0:
-                times = 0
-                tos = 0
-            else:
-                times = 0
-                tos= 1
-        elif space2fill==2:
-            if position[1]!=0:
-                times = 0
-                tos = 0
-            else:
-                times = 0
-                tos= 1
-        elif space2fill==1:
-            if position[1]==6:
-                times = 1
-                tos = 0
-            else:
-                times = 0
-                tos= 1
+        for i in range(2):
+            try:
+                if wall[wallRow][wallCols + i] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow -i][wallCols] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+            
+
+        for i in range(2):
+            try:
+                if wall[wallRow-1][wallCols-i] !=0:
+                    ornt1 = 0
+            except IndexError:
+                ornt1=0
+            try:
+                if wall[wallRow-i-1][wallCols+1] !=0:
+                    ornt2 = 0
+            except IndexError:
+                ornt2 = 0
+        
+                
+        if ornt1==1 and position[1]!=0:
+            times=0
+            tos=0
+        elif ornt2==1 and position[1]!=6:
+            times=1
+            tos=0
+        else:
+            times=0
+            tos=1
         
 
 
@@ -311,6 +507,8 @@ def updateWall(id,shape,position,times):
             firstColumnBlank=position[1]+col-2
         elif id=='T' and times==2:
             firstColumnBlank=position[1]+col-1
+        elif id=='L' and times==3:
+            firstColumnBlank=position[1]+col-1
         elif id=='T' and times==3:
             firstColumnBlank=position[1]+col-1
         elif id=='S' and times==1:
@@ -333,7 +531,7 @@ def main(visibleBlocks):
     while len(visibleBlocks)!=0:
         newBlock = visibleBlocks[0]         #next block to be stck in the wall
         shape, dimension= initialiseBlock(newBlock)                 #identifying the shape and size of the Block
-        moreSpace, space2fill, position = isBlankSpaceLeft()        #checking for the free space in the wall
+        moreSpace, space2fill, position = isBlankSpaceLeft(dimension)        #checking for the free space in the wall
     
         if space2fill<int(dimension[0]):        #if the space is less than the required space check for the another block
             visibleBlocks.append(visibleBlocks[0])
@@ -364,5 +562,3 @@ while(stacked<28):
         continue;
     main(visibleBlocks)
     stacked=stacked+visible
-    
-
